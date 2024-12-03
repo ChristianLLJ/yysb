@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>语音控制系统</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body, html {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #74EBD5, #ACB6E5);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1500px;
+            padding: 60px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            width: 100%;
+            font-size: 40px; /* 增大标题字体大小 */
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 20px 40px;
+            margin: 0 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 18px; /* 增大按钮文字大小 */
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .device {
+            margin: 10px auto; /* Center devices within the container */
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
+            display: flex; /* Ensure flex layout for device elements */
+            justify-content: start; /* Align items to the start */
+            width: 80%; /* Set a specific width for alignment */
+            font-size: 18px; /* 增大设备名称文字大小 */
+        }
+
+        .device:hover {
+            background-color: #e9ecef;
+        }
+
+        .device-icon {
+            font-size: 24px;
+            margin-right: 20px;
+        }
+
+        .device-on {
+            color: #ffc107; /* Bright yellow when on */
+        }
+
+        .device-off {
+            color: #6c757d; /* Grey when off */
+        }
+
+        .ac-icon {
+            font-size: 24px;
+        }
+
+        .ac-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ac-mode {
+            margin-top: 5px;
+        }
+
+        #ac-mode span {
+            font-size: 20px; /* 确保模式显示文字大小适中 */
+            margin-left: 10px;
+        }
+
+        #status h2 {
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 5px;
+            font-size: 24px; /* 增大状态标题字体大小 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>语音控制系统</h1>
+        <div class="buttons">
+            <button class="button" id="start-btn">开始录音</button>
+            <button class="button" id="stop-btn">结束录音</button>
+        </div>
+        <div id="status">
+            <h2>设备状态</h2>
+            <div class="device" id="device1">
+                <span class="device-icon device-off" id="device1-icon">&#x1F4A1;</span>
+                <span>电视</span>
+                <span id="device1-status"></span> <!-- Status text -->
+            </div>
+            <div class="device" id="device2">
+                <span class="device-icon device-off" id="device2-icon">&#x1F4A1;</span>
+                <span>台灯</span>
+                <span id="device2-status"></span> <!-- Status text -->
+            </div>
+            <div class="device" id="device3">
+                <span class="device-icon device-off" id="device3-icon">&#x1F4A1;</span>
+                <span>电脑</span>
+                <span id="device3-status"></span> <!-- Status text -->
+            </div>
+            <div class="device" id="ac">
+                <span class="device-icon ac-icon" id="ac-icon">&#x1F4A8;</span>
+                <div class="ac-status">
+                    <div id="ac-power">空调状态: 关闭</div>
+                    <div class="ac-mode">
+                        模式: <span id="ac-mode">&#x2744;</span>
+                    </div>
+                    <div>温度: <span id="ac-temperature"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function updateStatus() {
+                $.get('/status', function(data) {
+                    // Update devices
+                    $('#device1-icon').attr('class', 'device-icon ' + (data.GeneralEquipments[0] ? 'device-on' : 'device-off'));
+                    $('#device2-icon').attr('class', 'device-icon ' + (data.GeneralEquipments[1] ? 'device-on' : 'device-off'));
+                    $('#device3-icon').attr('class', 'device-icon ' + (data.GeneralEquipments[2] ? 'device-on' : 'device-off'));
+
+                    // Update general equipments status text
+                    $('#device1-status').text(data.GeneralEquipments[0] ? ' - 开启' : ' - 关闭');
+                    $('#device2-status').text(data.GeneralEquipments[1] ? ' - 开启' : ' - 关闭');
+                    $('#device3-status').text(data.GeneralEquipments[2] ? ' - 开启' : ' - 关闭');
+
+                    // Update air conditioner status
+                    $('#ac-power').text('空调状态: ' + (data.air_conditioner_state ? '开启' : '关闭'));
+                    $('#ac-temperature').text(data.air_conditioner_temp);
+                    
+                    // Update air conditioner mode
+                    let modeIcon = '';
+                    if (data.air_conditioner_mode === 'cool') {
+                        modeIcon = '&#x2744;'; // Snowflake for cooling
+                    } else if (data.air_conditioner_mode === 'heat') {
+                        modeIcon = '&#x2600;'; // Sun for heating
+                    }
+                    $('#ac-mode').html(modeIcon);
+                });
+            }
+
+            $('#start-btn').click(function() {
+                $.post('/start', function() {
+                });
+            });
+
+            $('#stop-btn').click(function() {
+                $.post('/stop', function() {
+                });
+            });
+
+            setInterval(updateStatus, 500);
+        });
+    </script>
+</body>
+</html>

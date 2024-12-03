@@ -1,0 +1,106 @@
+body, html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #74EBD5, #ACB6E5);
+}
+
+.container {
+    width: 100%;
+    max-width: 1500px;
+    padding: 60px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+    width: 100%;
+    font-size: 40px; /* 增大标题字体大小 */
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 20px 40px;
+    margin: 0 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 18px; /* 增大按钮文字大小 */
+}
+
+.button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.device {
+    margin: 10px auto; /* Center devices within the container */
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s ease-in-out;
+    display: flex; /* Ensure flex layout for device elements */
+    justify-content: start; /* Align items to the start */
+    width: 80%; /* Set a specific width for alignment */
+    font-size: 18px; /* 增大设备名称文字大小 */
+}
+
+.device:hover {
+    background-color: #e9ecef;
+}
+
+.device-icon {
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.bulb-on {
+    color: #ffc107; /* Bright yellow when on */
+}
+
+.bulb-off {
+    color: #6c757d; /* Grey when off */
+}
+
+.ac-icon {
+    font-size: 24px;
+}
+
+.ac-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.ac-mode {
+    margin-top: 5px;
+}
+
+#ac-mode span {
+    font-size: 20px; /* 确保模式显示文字大小适中 */
+    margin-left: 10px;
+}
+
+#status h2 {
+    border-bottom: 2px solid #007BFF;
+    padding-bottom: 5px;
+    font-size: 24px; /* 增大状态标题字体大小 */
+}
